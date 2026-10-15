@@ -1,0 +1,1311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Why chords sound good</title>
+<meta name="description" content="A short, listenable essay on vibrations, harmonics, and why some notes blend while others rub.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    --paper: #f6f2ea;
+    --ink: #1f1d1a;
+    --ink-2: #55514a;
+    --ink-3: #8b867c;
+    --rule: #dcd5c7;
+    --wash: #ece6da;
+    --n1: #c4532b;   /* lowest note  */
+    --n2: #3b5fc4;   /* middle note  */
+    --n3: #1e9a8a;   /* highest note */
+    --serif: "Newsreader", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --paper: #1b1a18; --ink: #efebe3; --ink-2: #c2bcb0; --ink-3: #8c877e;
+      --rule: #36332e; --wash: #26241f;
+      --n1: #e0683c; --n2: #5a86e6; --n3: #27a294;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --paper: #1b1a18; --ink: #efebe3; --ink-2: #c2bcb0; --ink-3: #8c877e;
+    --rule: #36332e; --wash: #26241f;
+    --n1: #e0683c; --n2: #5a86e6; --n3: #27a294;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--serif); font-size: 20px; line-height: 1.62;
+    font-optical-sizing: auto; text-rendering: optimizeLegibility;
+    transition: background .3s, color .3s;
+  }
+  ::selection { background: color-mix(in oklab, var(--n2) 25%, transparent); }
+
+  /* ---------- layout ---------- */
+  .prose { max-width: 650px; margin: 0 auto; padding: 0 24px; }
+  figure { max-width: 1000px; margin: 44px auto 56px; padding: 0 24px; }
+  section { padding: 56px 0 24px; }
+  section + section { border-top: 1px solid var(--rule); }
+
+  /* ---------- masthead ---------- */
+  .top {
+    display: flex; justify-content: space-between; align-items: center;
+    max-width: 1000px; margin: 0 auto; padding: 22px 24px;
+    font-family: var(--sans); font-size: 13px; color: var(--ink-3); letter-spacing: .02em;
+  }
+  .theme-toggle {
+    font: inherit; color: var(--ink-2); background: none; border: 1px solid var(--rule);
+    border-radius: 999px; padding: 5px 12px; cursor: pointer;
+  }
+  .theme-toggle:hover { color: var(--ink); border-color: var(--ink-3); }
+  header.hero { padding: 64px 0 8px; }
+  .kicker {
+    font-family: var(--sans); font-size: 12px; font-weight: 600; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--ink-3); margin: 0 0 18px;
+  }
+  h1 {
+    font-weight: 350; font-size: clamp(46px, 8vw, 84px); line-height: 1.0;
+    letter-spacing: -0.025em; margin: 0 0 24px;
+  }
+  h1 em { font-style: italic; font-weight: 300; }
+  .dek { font-size: 24px; line-height: 1.45; color: var(--ink-2); margin: 0 0 28px; font-weight: 350; }
+  .byline { font-family: var(--sans); font-size: 13px; color: var(--ink-3); }
+
+  h2 {
+    font-weight: 400; font-size: clamp(30px, 4.2vw, 40px); line-height: 1.12;
+    letter-spacing: -0.015em; margin: 6px 0 22px;
+  }
+  .num {
+    font-family: var(--sans); font-size: 12px; font-weight: 600; letter-spacing: .14em;
+    color: var(--ink-3); text-transform: uppercase;
+  }
+  p { margin: 0 0 1.05em; }
+  .lede::first-letter {
+    float: left; font-size: 3.6em; line-height: .86; padding: .06em .08em 0 0; font-weight: 400;
+  }
+  strong { font-weight: 600; }
+  .aside {
+    font-size: 17px; line-height: 1.55; color: var(--ink-2);
+    border-left: 2px solid var(--rule); padding: 2px 0 2px 18px; margin: 1.6em 0;
+  }
+  .pull {
+    font-size: 27px; line-height: 1.35; font-style: italic; font-weight: 350;
+    margin: 1.6em 0; color: var(--ink);
+  }
+  .swatch { display: inline-block; width: .62em; height: .62em; border-radius: 50%; vertical-align: .05em; margin-right: .25em; }
+  .s1 { background: var(--n1); } .s2 { background: var(--n2); } .s3 { background: var(--n3); }
+
+  /* ---------- figure chrome ---------- */
+  .fig-head {
+    display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  figcaption {
+    font-family: var(--sans); font-size: 13px; line-height: 1.55; color: var(--ink-2);
+    margin-top: 12px; max-width: 720px;
+  }
+  figcaption b { color: var(--ink); font-weight: 600; }
+  .readout {
+    font-family: var(--sans); font-size: 14.5px; line-height: 1.6; color: var(--ink-2);
+    margin-top: 14px; min-height: 3.2em; max-width: 760px;
+  }
+  .readout b { color: var(--ink); font-weight: 600; }
+
+  button { font-family: var(--sans); }
+  .chip {
+    font-size: 13.5px; color: var(--ink-2); background: transparent;
+    border: 1px solid var(--rule); border-radius: 999px; padding: 6px 13px 6px;
+    cursor: pointer; transition: background .2s, color .2s, border-color .2s;
+    display: inline-flex; gap: 7px; align-items: baseline;
+  }
+  .chip small { font-size: 11.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .chip:hover { border-color: var(--ink-3); color: var(--ink); }
+  .chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .chip[aria-pressed="true"] small { color: color-mix(in oklab, var(--paper) 70%, var(--ink)); }
+
+  .play {
+    font-size: 13.5px; font-weight: 500; color: var(--ink); background: var(--wash);
+    border: 1px solid transparent; border-radius: 999px; padding: 7px 15px 7px 11px;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+    transition: background .2s, border-color .2s;
+  }
+  .play:hover { border-color: var(--ink-3); }
+  .play .ico {
+    width: 18px; height: 18px; border-radius: 50%; background: var(--ink); position: relative; flex: none;
+  }
+  .play .ico::after {
+    content: ""; position: absolute; left: 7px; top: 5px;
+    border-left: 6px solid var(--paper); border-top: 4px solid transparent; border-bottom: 4px solid transparent;
+  }
+  .play.is-playing .ico { animation: pulse 1s ease-in-out infinite; }
+  .play.is-on .ico::after {
+    left: 6px; top: 6px; border: 0; width: 6px; height: 6px; background: var(--paper); border-radius: 1px;
+  }
+  @keyframes pulse { 50% { transform: scale(.82); } }
+  button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--n2); outline-offset: 2px; }
+
+  /* ---------- svg ---------- */
+  svg.viz { width: 100%; height: auto; display: block; overflow: visible; }
+  svg.viz text { font-family: var(--sans); font-size: 12px; fill: var(--ink-2); }
+  svg.viz text.muted { fill: var(--ink-3); font-size: 11px; }
+  svg.viz text.strong { fill: var(--ink); font-weight: 600; }
+  .axis { stroke: var(--rule); stroke-width: 1; fill: none; }
+  .guide { stroke: var(--ink-3); stroke-width: 1; stroke-dasharray: 2 4; fill: none; }
+  .wave { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+  .c1 { stroke: var(--n1); } .c2 { stroke: var(--n2); } .c3 { stroke: var(--n3); } .ci { stroke: var(--ink); }
+  .f1 { fill: var(--n1); } .f2 { fill: var(--n2); } .f3 { fill: var(--n3); } .fi { fill: var(--ink); }
+  .stem { stroke-width: 2.5; stroke-linecap: round; transition: opacity .25s; }
+  .fade-in { animation: fadein .45s ease both; }
+  @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ---------- meter ---------- */
+  .meter { font-family: var(--sans); font-size: 13px; color: var(--ink-2); margin-top: 18px; max-width: 520px; }
+  .meter .row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .meter .row b { color: var(--ink); font-weight: 600; }
+  .meter .track { height: 6px; background: var(--wash); border-radius: 3px; position: relative; overflow: hidden; }
+  .meter .fill { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--ink); border-radius: 3px; transition: width .5s cubic-bezier(.3,.7,.2,1); }
+  .meter .ends { display: flex; justify-content: space-between; color: var(--ink-3); font-size: 11.5px; margin-top: 5px; }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 22px; font-family: var(--sans); font-size: 12.5px; color: var(--ink-2); margin-top: 10px; }
+  .legend span { display: inline-flex; align-items: center; gap: 7px; }
+  .legend svg { overflow: visible; }
+
+  /* ---------- slider ---------- */
+  .slider-wrap { font-family: var(--sans); font-size: 13px; color: var(--ink-2); display: flex; align-items: center; gap: 14px; flex: 1; min-width: 260px; max-width: 520px; }
+  input[type=range] { -webkit-appearance: none; appearance: none; flex: 1; height: 22px; background: transparent; cursor: pointer; }
+  input[type=range]::-webkit-slider-runnable-track { height: 2px; background: var(--rule); }
+  input[type=range]::-moz-range-track { height: 2px; background: var(--rule); }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--ink); margin-top: -8px; border: 3px solid var(--paper); box-shadow: 0 0 0 1px var(--ink); }
+  input[type=range]::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--ink); border: 3px solid var(--paper); box-shadow: 0 0 0 1px var(--ink); }
+  .slider-wrap output { font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600; min-width: 4.4em; text-align: right; }
+
+  /* ---------- keyboard ---------- */
+  .keys { position: relative; height: 120px; display: flex; margin-top: 18px; user-select: none; -webkit-user-select: none; max-width: 760px; }
+  .key {
+    border: 0; padding: 0; cursor: pointer; position: relative;
+    font-size: 10.5px; color: var(--ink-3); display: flex; align-items: flex-end; justify-content: center;
+  }
+  .key.white {
+    flex: 1; height: 100%; background: color-mix(in oklab, var(--paper) 55%, white);
+    border: 1px solid var(--rule); border-right-width: 0; padding-bottom: 8px;
+  }
+  .key.white:first-child { border-radius: 0 0 0 6px; }
+  .key.white:last-of-type { border-right-width: 1px; border-radius: 0 0 6px 0; }
+  .key.black {
+    position: absolute; top: 0; width: 4.4%; height: 62%; z-index: 2;
+    background: #23211e; border-radius: 0 0 4px 4px; color: transparent; padding-bottom: 6px;
+  }
+  :root[data-theme="dark"] .key.white { background: #d9d3c7; border-color: #9c968b; color: #6b665d; }
+  :root[data-theme="dark"] .key.black { background: #0d0c0b; }
+  :root[data-theme="dark"] .key.sel { color: #1f1d1a; }
+  :root[data-theme="dark"] .key .dot { border-color: #d9d3c7; }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .key.white { background: #d9d3c7; border-color: #9c968b; color: #6b665d; }
+    :root:where(:not([data-theme="light"])) .key.black { background: #0d0c0b; }
+    :root:where(:not([data-theme="light"])) .key.sel { color: #1f1d1a; }
+    :root:where(:not([data-theme="light"])) .key .dot { border-color: #d9d3c7; }
+  }
+  .key:hover { filter: brightness(.96); }
+  .key .dot { position: absolute; left: 50%; bottom: 26px; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; border: 2px solid var(--paper); display: none; }
+  .key.black .dot { bottom: 10px; }
+  .key.sel .dot { display: block; }
+  .key.sel { color: var(--ink); font-weight: 600; }
+
+  .pairs { list-style: none; padding: 0; margin: 16px 0 0; font-family: var(--sans); font-size: 13.5px; color: var(--ink-2); display: grid; gap: 6px; }
+  .pairs li { display: flex; gap: 10px; align-items: center; }
+  .pairs .duo { display: inline-flex; gap: 3px; }
+  .pairs .duo i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+  .pairs b { color: var(--ink); font-weight: 600; }
+  .split { display: grid; grid-template-columns: 1.15fr 1fr; gap: 28px 40px; align-items: start; }
+  @media (max-width: 760px) { .split { grid-template-columns: 1fr; } }
+  .ratio-big { font-family: var(--serif); font-size: 44px; line-height: 1; letter-spacing: -.01em; color: var(--ink); margin: 6px 0 10px; font-variant-numeric: lining-nums tabular-nums; }
+  .label-sm { font-family: var(--sans); font-size: 11.5px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin-top: 18px; }
+
+  /* ---------- tooltip & table ---------- */
+  .tip {
+    position: absolute; pointer-events: none; background: var(--ink); color: var(--paper);
+    font-family: var(--sans); font-size: 12.5px; line-height: 1.45; padding: 8px 11px; border-radius: 6px;
+    opacity: 0; transform: translate(-50%, calc(-100% - 14px)); transition: opacity .15s; white-space: nowrap;
+  }
+  .tip b { font-weight: 600; }
+  .tip.on { opacity: 1; }
+  details { font-family: var(--sans); font-size: 13px; color: var(--ink-2); margin-top: 14px; }
+  summary { cursor: pointer; color: var(--ink-2); }
+  table { border-collapse: collapse; margin-top: 10px; font-variant-numeric: tabular-nums; }
+  th, td { text-align: left; padding: 5px 22px 5px 0; border-bottom: 1px solid var(--rule); }
+  th { color: var(--ink-3); font-weight: 500; }
+
+  .twin { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  @media (max-width: 680px) { .twin { grid-template-columns: 1fr; } }
+  .twin h4 { font-family: var(--sans); font-size: 13px; font-weight: 600; margin: 0 0 4px; color: var(--ink); }
+  .twin p { font-family: var(--sans); font-size: 13px; color: var(--ink-2); margin: 0 0 10px; }
+
+  ol.recap { padding-left: 1.2em; }
+  ol.recap li { margin-bottom: .55em; padding-left: .3em; }
+  ol.recap li::marker { font-family: var(--sans); font-size: .7em; color: var(--ink-3); font-weight: 600; }
+  footer { border-top: 1px solid var(--rule); margin-top: 48px; padding: 36px 0 80px; }
+  footer .prose { font-family: var(--sans); font-size: 13px; line-height: 1.6; color: var(--ink-2); }
+  footer h3 { font-family: var(--sans); font-size: 11.5px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 12px; }
+  footer li { margin-bottom: 6px; }
+  .sound-note { font-family: var(--sans); font-size: 13px; color: var(--ink-3); display: inline-flex; gap: 8px; align-items: center; }
+
+  @media (max-width: 600px) {
+    body { font-size: 18.5px; }
+    .dek { font-size: 21px; }
+    figure { padding: 0 14px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <span>An illustrated essay · with sound</span>
+  <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">Dark</button>
+</div>
+
+<header class="hero">
+  <div class="prose">
+    <p class="kicker">Music, physics &amp; the ear</p>
+    <h1>Why chords <em>sound good</em></h1>
+    <p class="dek">Some notes melt together. Others rub and buzz. The difference comes from simple patterns in the air, and from the way your ear handles them.</p>
+    <p class="byline"><span class="sound-note">♪ Turn your sound on. Every figure on this page makes a sound.</span></p>
+  </div>
+  <figure>
+    <svg class="viz" id="hero" viewBox="0 0 960 220" role="img" aria-label="Three waves at frequencies in the ratio 4 to 5 to 6, and the single repeating wave they add up to."></svg>
+    <div class="fig-head" style="margin-top:10px">
+      <figcaption style="margin:0">A C-major chord, drawn as air pressure. Three notes (<span class="swatch s1"></span>C, <span class="swatch s2"></span>E, <span class="swatch s3"></span>G) add up to one wave, <b>the bold line</b>, that repeats in a short, steady loop.</figcaption>
+      <button class="play" data-play="hero" type="button"><span class="ico"></span>Play the chord</button>
+    </div>
+  </figure>
+</header>
+
+<main>
+
+<!-- ============ 01 ============ -->
+<section id="s1">
+  <div class="prose">
+    <div class="num">01 — Vibration</div>
+    <h2>A note is a pattern that repeats</h2>
+    <p class="lede">When a string, a reed, or your vocal cords make a note, they push the air back and forth in a steady rhythm. Your eardrum picks up that rhythm. The number of back-and-forth cycles per second is called the <strong>frequency</strong>, and you hear it as pitch.</p>
+    <p>The A below middle C vibrates <strong>220 times a second</strong>. Double that, and you hear the same note, only higher. Halve it, and it drops an octave. Keep that doubling in mind, because it's the first clue.</p>
+  </div>
+  <figure>
+    <div class="fig-head">
+      <div class="controls" id="f1controls" role="group" aria-label="Choose a note">
+        <button class="chip" type="button" data-f="110" aria-pressed="false">Low A <small>110 Hz</small></button>
+        <button class="chip" type="button" data-f="220" aria-pressed="true">A <small>220 Hz</small></button>
+        <button class="chip" type="button" data-f="440" aria-pressed="false">High A <small>440 Hz</small></button>
+      </div>
+    </div>
+    <svg class="viz" id="f1" viewBox="0 0 960 210" role="img" aria-label="A smooth wave. Higher notes squeeze more cycles into the same time."></svg>
+    <figcaption>Fig. 1. <b>One fiftieth of a second</b> of a pure tone. Click a note to hear it. Every time the frequency doubles, twice as many cycles fit in the same window.</figcaption>
+  </figure>
+</section>
+
+<!-- ============ 02 ============ -->
+<section id="s2">
+  <div class="prose">
+    <div class="num">02 — Ratios</div>
+    <h2>Two notes add up to one new pattern</h2>
+    <p>Play two notes at once and your ear doesn't get two separate waves. The air can only move one way at a time, so it gets their <strong>sum</strong>: one combined wave.</p>
+    <p>What that combined wave looks like depends on the <em>ratio</em> between the two frequencies. If the high note vibrates exactly 3 times for every 2 of the low note, their peaks line up again and again, and the sum settles into a short, tidy loop. If the ratio is messy, the peaks rarely meet, and the pattern takes a long time to repeat.</p>
+  </div>
+  <figure>
+    <div class="fig-head">
+      <div class="controls" id="f2chips" role="group" aria-label="Choose an interval"></div>
+      <button class="play" data-play="f2" type="button"><span class="ico"></span>Play</button>
+    </div>
+    <svg class="viz" id="f2" viewBox="0 0 960 300" role="img" aria-label="Two waves and their sum. Dotted lines mark where both waves peak together."></svg>
+    <div class="readout" id="f2read" aria-live="polite"></div>
+    <figcaption>Fig. 2. Eight vibrations of <span class="swatch s1"></span>a low note (220 Hz) and <span class="swatch s2"></span>a higher one. Dots mark each wave's peaks. <b>Dotted lines</b> mark the moments both peak together, where the shared pattern starts again.</figcaption>
+  </figure>
+  <div class="prose">
+    <p>People noticed this more than 2,500 years ago. Pythagoras's followers found that strings whose lengths form simple ratios (1:2, 2:3, 3:4) sound pleasing together. That's the octave, the fifth and the fourth, still the backbone of most music.</p>
+    <p>But "simple numbers" is a description, not a reason. Your ear doesn't count. To see <em>why</em> simple ratios sound smooth, we have to look at what happens when two frequencies come close to each other without quite matching.</p>
+  </div>
+</section>
+
+<!-- ============ 03 ============ -->
+<section id="s3">
+  <div class="prose">
+    <div class="num">03 — Roughness</div>
+    <h2>Close frequencies rub against each other</h2>
+    <p>Play two pure tones that are almost the same and something odd happens. Their peaks drift in and out of step, so the sound swells and fades. Musicians call this <strong>beating</strong>; it's how guitarists tune by ear.</p>
+    <p>Now pull them further apart. Once the wobble passes about fifteen times a second, you stop hearing a pulse. It turns into a grainy, buzzing texture called <strong>roughness</strong>. Pull further still and the buzz clears: you hear two clean, separate notes.</p>
+  </div>
+  <figure>
+    <div class="fig-head">
+      <div class="slider-wrap">
+        <label for="beat">Gap between the two tones</label>
+        <input type="range" id="beat" min="0" max="90" step="0.5" value="3">
+        <output id="beatOut" for="beat">3 Hz</output>
+      </div>
+      <button class="play" id="beatPlay" type="button" aria-pressed="false"><span class="ico"></span><span class="lbl">Listen (hold a tone)</span></button>
+    </div>
+    <svg class="viz" id="f3a" viewBox="0 0 960 150" role="img" aria-label="The loudness envelope of two nearby tones over one second."></svg>
+    <svg class="viz" id="f3b" viewBox="0 0 960 150" role="img" aria-label="How rough two tones sound as the gap between them grows."></svg>
+    <div class="readout" id="f3read" aria-live="polite"></div>
+    <figcaption>Fig. 3. <b>Top:</b> the loudness of a 220 Hz tone plus a second tone, over one second. <b>Bottom:</b> how rough the pair sounds as the gap grows. Roughness peaks at around 20 Hz apart for notes in this range, then fades. Press <i>Listen</i> and drag the slider.</figcaption>
+  </figure>
+  <div class="prose">
+    <p class="aside">Why does this happen? Your inner ear sorts sound by frequency along a coiled membrane, a bit like a piano keyboard laid out in flesh. Two frequencies close enough to excite the same patch can't be told apart, so they interfere. That patch is called a <em>critical band</em>. Roughness is the sensation of two tones fighting over the same stretch of keyboard.</p>
+  </div>
+</section>
+
+<!-- ============ 04 ============ -->
+<section id="s4">
+  <div class="prose">
+    <div class="num">04 — Harmonics</div>
+    <h2>Every note is secretly a chord</h2>
+    <p>Here's the piece that ties it all together. Real notes aren't pure tones. A plucked string vibrates as a whole, and at the same time in halves, thirds, quarters, and so on. Each of those adds a quieter, higher frequency at exactly <strong>2×, 3×, 4×…</strong> the main one.</p>
+    <p>These extra frequencies are called <strong>harmonics</strong>. Your brain fuses them into a single note. They're why a piano and a clarinet playing the same A sound different: the same ladder, with different rungs emphasised.</p>
+  </div>
+  <figure>
+    <div class="fig-head">
+      <span class="sound-note">One note, A at 220 Hz, split into its first six harmonics</span>
+      <button class="play" data-play="f4a" type="button"><span class="ico"></span>Hear them one by one, then together</button>
+    </div>
+    <svg class="viz" id="f4a" viewBox="0 0 960 170" role="img" aria-label="Six evenly spaced harmonics of a single note, getting quieter as they get higher."></svg>
+    <figcaption>Fig. 4a. A note's harmonics sit at whole-number multiples of its frequency, and each one is a little quieter than the last. Together they sound like one note.</figcaption>
+  </figure>
+  <div class="prose">
+    <p>So two notes played together are really two <em>ladders</em> of harmonics. That changes the question. Wherever a rung from one ladder lands <strong>exactly on</strong> a rung of the other, the two reinforce each other and nothing clashes. Wherever rungs land <strong>close but not equal</strong>, they rub, and we're back to the roughness from Fig. 3.</p>
+  </div>
+  <figure>
+    <div class="fig-head">
+      <div class="controls" id="f4chips" role="group" aria-label="Choose an interval"></div>
+      <button class="play" data-play="f4b" type="button"><span class="ico"></span>Play</button>
+    </div>
+    <svg class="viz" id="f4b" viewBox="0 0 960 240" role="img" aria-label="Two ladders of harmonics, with shared rungs and near-misses marked."></svg>
+    <div class="legend" aria-hidden="true">
+      <span><svg width="14" height="14"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>shared harmonic: the two blend</span>
+      <span><svg width="26" height="12"><path d="M1 9 Q5 1 9 7 T17 6 T25 4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>near miss: they rub (darker = rougher)</span>
+    </div>
+    <div class="meter" id="f4meter"></div>
+    <figcaption>Fig. 4b. <span class="swatch s1"></span>The low note's harmonics and <span class="swatch s2"></span>the high note's, on a shared frequency scale. The bottom strip shows them as your ear hears them: all at once.</figcaption>
+  </figure>
+  <div class="prose">
+    <p class="pull">Simple ratios make the ladders interlock. That's the whole secret.</p>
+    <p>With a fifth (3:2), every third rung of the low ladder lands exactly on every second rung of the high one. The rest are spaced well apart. With a semitone (16:15), almost no rungs match, and nearly every pair lands in each other's critical band. The ratio isn't magic. It just predicts how cleanly the harmonics fit together.</p>
+  </div>
+</section>
+
+<!-- ============ 05 ============ -->
+<section id="s5">
+  <div class="prose">
+    <div class="num">05 — The map</div>
+    <h2>Add up the friction for every interval</h2>
+    <p>If you total up the rubbing between every pair of harmonics, for every possible gap between two notes, you get a map. In the 1960s the researchers Reinier Plomp and Willem Levelt measured how rough people found pairs of pure tones. Run their data through the harmonic ladders and this curve falls out.</p>
+    <p>The valleys land exactly where musicians have always placed their favourite intervals.</p>
+  </div>
+  <figure style="position:relative">
+    <svg class="viz" id="f5" viewBox="0 0 960 352" role="img" aria-label="A curve of roughness across one octave, with valleys at the octave, fifth, fourth, major and minor thirds and sixths."></svg>
+    <div class="tip" id="f5tip"></div>
+    <figcaption>Fig. 5. Predicted roughness of two notes, from unison (left) to an octave apart (right), for notes with six harmonics. <b>Valleys are consonant intervals.</b> Hover to explore and click anywhere on the curve to hear that interval. Ticks along the bottom mark the twelve piano semitones.</figcaption>
+    <details>
+      <summary>View as a table</summary>
+      <table id="f5table"><thead><tr><th>Interval</th><th>Ratio</th><th>Semitones</th><th>Roughness (0–100)</th></tr></thead><tbody></tbody></table>
+    </details>
+  </figure>
+  <div class="prose">
+    <p class="aside">The best evidence that harmonics are behind this: change the harmonics and the valleys move. Bells, gongs and metal bars have harmonics that aren't neat whole-number multiples. Music made for them, like Indonesian gamelan, often uses intervals that would sound "off" on a piano but blend beautifully on those instruments.</p>
+  </div>
+</section>
+
+<!-- ============ 06 ============ -->
+<section id="s6">
+  <div class="prose">
+    <div class="num">06 — Chords</div>
+    <h2>A chord is three ladders that fit</h2>
+    <p>A chord is the same idea with more ladders. The <strong>major chord</strong> is the textbook example: its three notes vibrate in the ratio <strong>4 : 5 : 6</strong>. That means they are exactly the 4th, 5th and 6th harmonics of one lower note that isn't even being played.</p>
+    <p>So a major chord isn't three strangers. It's three neighbouring rungs from a single ladder. Their harmonics interlock, the friction stays low, and your brain can hear the whole thing as one rich, unified sound. Researchers call this property <strong>harmonicity</strong>. In listening experiments it's one of the strongest predictors of which chords people like.</p>
+    <p>Harmonicity also fills a gap that roughness leaves. In this model a tritone rubs about as much as a minor third, yet it sounds far more unsettled. The difference is that its notes share no simple ladder (45 : 32), so the brain can't fuse them into one sound.</p>
+    <p>Try the presets, or play your own three notes on the keyboard.</p>
+  </div>
+  <figure>
+    <div class="fig-head">
+      <div class="controls" id="f6chips" role="group" aria-label="Chord presets"></div>
+      <button class="play" data-play="f6" type="button"><span class="ico"></span>Play chord</button>
+    </div>
+    <div class="keys" id="keys" aria-label="Piano keyboard: choose up to three notes"></div>
+    <svg class="viz" id="f6" viewBox="0 0 960 300" role="img" aria-label="The harmonics of each chord note, and where they blend or rub." style="margin-top:30px"></svg>
+    <div class="legend" aria-hidden="true">
+      <span><svg width="14" height="14"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>shared harmonic</span>
+      <span><svg width="26" height="12"><path d="M1 9 Q5 1 9 7 T17 6 T25 4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>near miss (darker = rougher)</span>
+    </div>
+    <div class="split" style="margin-top:22px">
+      <div>
+        <div class="label-sm">Closest simple ratio</div>
+        <div class="ratio-big" id="f6ratio">4 : 5 : 6</div>
+        <div class="readout" id="f6read" style="margin-top:0" aria-live="polite"></div>
+      </div>
+      <div>
+        <div class="meter" id="f6meter" style="margin-top:22px"></div>
+        <div class="label-sm">Each pair of notes</div>
+        <ul class="pairs" id="f6pairs"></ul>
+      </div>
+    </div>
+    <figcaption>Fig. 6. Chords are played in piano tuning. Roughness is measured against a tight cluster of neighbouring piano keys in the same spot. Try a chord low on the keyboard and then high: the same chord gets muddier lower down, because low harmonics crowd into the same critical bands.</figcaption>
+  </figure>
+  <div class="prose">
+    <p>The <strong>minor chord</strong> is a nice contrast. Its friction is nearly as low as the major chord's, but its notes fit a more distant common ladder (10 : 12 : 15). It's smooth but less fused, which is part of what gives it its darker, more complex colour. The <strong>diminished</strong> chord's numbers balloon, and so does its tension.</p>
+  </div>
+</section>
+
+<!-- ============ 07 ============ -->
+<section id="s7">
+  <div class="prose">
+    <div class="num">07 — The other half</div>
+    <h2>Physics sets the stage. People write the play.</h2>
+    <p>Everything so far explains why some combinations are <em>smooth</em> and others <em>rough</em>. Whether smooth sounds <em>good</em> is a different question, and the answer is more interesting.</p>
+    <p><strong>Your piano is slightly out of tune, on purpose.</strong> A perfect 5:4 major third only works in one key. To make every key usable, modern instruments split the octave into twelve exactly equal steps. Fifths stay almost perfect. Thirds come out a little wide, so two of their harmonics beat gently about ten times a second. We've grown so used to that shimmer that most of us never notice it.</p>
+  </div>
+  <figure>
+    <div class="twin">
+      <div>
+        <h4>Pure major third · 5 : 4</h4>
+        <p>The 5th harmonic of C and the 4th harmonic of E land on the same frequency: 1308 Hz.</p>
+        <svg class="viz" id="f7a" viewBox="0 0 460 110" role="img" aria-label="A steady, flat loudness envelope."></svg>
+        <button class="play" data-play="f7a" type="button" style="margin-top:10px"><span class="ico"></span>Play pure</button>
+      </div>
+      <div>
+        <h4>Piano major third · 2<sup>4/12</sup></h4>
+        <p>They miss by about 10 Hz, so where they overlap the sound swells and fades about ten times a second.</p>
+        <svg class="viz" id="f7b" viewBox="0 0 460 110" role="img" aria-label="A loudness envelope wobbling about ten times per second."></svg>
+        <button class="play" data-play="f7b" type="button" style="margin-top:10px"><span class="ico"></span>Play piano-tuned</button>
+      </div>
+    </div>
+    <figcaption>Fig. 7. Loudness, over one second, of the two harmonics where C and E overlap. Listen closely to the upper part of the sound for the slow shimmer in the piano version.</figcaption>
+  </figure>
+  <div class="prose">
+    <p><strong>Tension is a feature, not a flaw.</strong> Music needs friction to go anywhere. A slightly rough chord creates a sense of leaning, an expectation, and the smooth chord after it feels like arriving home. Nearly every pop song, hymn and symphony runs on this pull.</p>
+  </div>
+  <figure>
+    <div class="fig-head">
+      <span class="sound-note">G7, a chord with a built-in tritone, resolving to C major</span>
+      <button class="play" data-play="f7c" type="button"><span class="ico"></span>Hear tension → release</button>
+    </div>
+    <div class="twin" id="f7c"></div>
+  </figure>
+  <div class="prose">
+    <p><strong>And taste is learned.</strong> In 2016, a team led by Josh McDermott played consonant and dissonant chords to the Tsimane', a community in the Bolivian Amazon with little exposure to Western music. They could tell smooth chords from rough ones, but they didn't <em>prefer</em> one over the other. Their preferences tracked what music they knew. The physics tells you which notes blend. Culture and experience decide how you feel about it.</p>
+  </div>
+</section>
+
+<!-- ============ recap ============ -->
+<section id="recap">
+  <div class="prose">
+    <div class="num">In one breath</div>
+    <h2>Why chords sound good</h2>
+    <ol class="recap">
+      <li>A note is air vibrating in a repeating pattern, and pitch is how fast it repeats.</li>
+      <li>Real notes carry a hidden ladder of harmonics at 2×, 3×, 4×… their frequency.</li>
+      <li>When two notes sound together, harmonics that <em>coincide</em> blend, and harmonics that land <em>close but not equal</em> rub, creating roughness.</li>
+      <li>Simple frequency ratios make the ladders interlock, so intervals like the octave, fifth and third sound smooth.</li>
+      <li>The major chord's 4 : 5 : 6 is three rungs of one ladder, which makes it smooth and unified.</li>
+      <li>Musicians use the pull between smooth and rough, and listeners learn what to love.</li>
+    </ol>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="prose">
+    <h3>Notes &amp; sources</h3>
+    <ul>
+      <li>Hermann von Helmholtz, <i>On the Sensations of Tone</i> (1863), the first theory of consonance as the absence of beating between harmonics.</li>
+      <li>R. Plomp &amp; W. J. M. Levelt, "Tonal consonance and critical bandwidth," <i>JASA</i> 38 (1965).</li>
+      <li>W. A. Sethares, <i>Tuning, Timbre, Spectrum, Scale</i> (1998). The roughness model behind Figs. 3–6 is Sethares's fit of Plomp &amp; Levelt's curve.</li>
+      <li>J. H. McDermott, A. J. Lehr &amp; A. J. Oxenham, "Individual differences reveal the basis of consonance," <i>Current Biology</i> 20 (2010), on harmonicity.</li>
+      <li>J. H. McDermott, A. F. Schultz, E. A. Undurraga &amp; R. A. Godoy, "Indifference to dissonance in native Amazonians reveals cultural variation in music perception," <i>Nature</i> 535 (2016).</li>
+    </ul>
+    <p style="margin-top:18px">The model in these figures: each note has six harmonics, each 12% quieter than the one below it. The sounds you hear are built the same way, so what you see is what you hear. Figs. 2, 4 and 5 use exact ratios. Figs. 6 and 7 use piano tuning where noted.</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+"use strict";
+
+/* ================================================================
+   Theme
+   ================================================================ */
+const root = document.documentElement;
+const toggle = document.getElementById("themeToggle");
+const isDark = () => root.dataset.theme ? root.dataset.theme === "dark"
+  : matchMedia("(prefers-color-scheme: dark)").matches;
+const syncToggle = () => { toggle.textContent = isDark() ? "Light" : "Dark"; };
+toggle.addEventListener("click", () => { root.dataset.theme = isDark() ? "light" : "dark"; syncToggle(); });
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", syncToggle);
+syncToggle();
+
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ================================================================
+   Helpers
+   ================================================================ */
+const $ = (s, r = document) => r.querySelector(s);
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  if (attrs) for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function text(parent, x, y, str, attrs = {}) {
+  const t = el("text", { x, y, ...attrs }, parent);
+  t.textContent = str;
+  return t;
+}
+const clear = svg => { while (svg.firstChild) svg.removeChild(svg.firstChild); };
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const gcd = (a, b) => b ? gcd(b, a % b) : a;
+const lcm = (a, b) => a / gcd(a, b) * b;
+function linePath(n, fx, fy) {
+  let d = "";
+  for (let i = 0; i <= n; i++) d += (i ? "L" : "M") + fx(i).toFixed(2) + " " + fy(i).toFixed(2);
+  return d;
+}
+
+/* ================================================================
+   Music data
+   ================================================================ */
+const NOTE = ["C","C♯","D","E♭","E","F","F♯","G","A♭","A","B♭","B"];
+const midiFreq = m => 440 * Math.pow(2, (m - 69) / 12);
+const midiName = m => NOTE[((m % 12) + 12) % 12] + (Math.floor(m / 12) - 1);
+const freqMidi = f => 69 + 12 * Math.log2(f / 440);
+const JUST = [[1,1],[16,15],[9,8],[6,5],[5,4],[4,3],[45,32],[3,2],[8,5],[5,3],[9,5],[15,8]];
+const INTERVAL = ["Unison","Minor second","Major second","Minor third","Major third","Perfect fourth",
+  "Tritone","Perfect fifth","Minor sixth","Major sixth","Minor seventh","Major seventh","Octave"];
+function intervalName(semis) {
+  if (semis === 0) return "Unison";
+  if (semis % 12 === 0) return semis === 12 ? "Octave" : (semis / 12) + " octaves";
+  return INTERVAL[semis % 12] + (semis > 12 ? " + octave" : "");
+}
+
+const INTERVALS = [
+  { name: "Octave",       r: [2, 1] },
+  { name: "Fifth",        r: [3, 2] },
+  { name: "Fourth",       r: [4, 3] },
+  { name: "Major third",  r: [5, 4] },
+  { name: "Minor third",  r: [6, 5] },
+  { name: "Whole step",   r: [9, 8] },
+  { name: "Tritone",      r: [45, 32] },
+  { name: "Semitone",     r: [16, 15] },
+];
+
+/* ================================================================
+   Roughness model (Plomp–Levelt, Sethares parameterisation)
+   ================================================================ */
+const H = 6;
+const amp = k => Math.pow(0.88, k - 1);
+function partials(f) { const p = []; for (let k = 1; k <= H; k++) p.push({ f: f * k, a: amp(k), k }); return p; }
+function pairRough(f1, a1, f2, a2) {
+  const fmin = Math.min(f1, f2), df = Math.abs(f1 - f2);
+  const s = 0.24 / (0.0207 * fmin + 18.96);
+  return Math.min(a1, a2) * (Math.exp(-3.51 * s * df) - Math.exp(-5.75 * s * df));
+}
+function roughness(freqs) {
+  const P = freqs.map(partials); let r = 0;
+  for (let i = 0; i < P.length; i++) for (let j = i + 1; j < P.length; j++)
+    for (const p of P[i]) for (const q of P[j]) r += pairRough(p.f, p.a, q.f, q.a);
+  return r;
+}
+const BASE = 220;
+const CURVE = [];
+for (let c = 0; c <= 1200; c++) CURVE.push(roughness([BASE, BASE * Math.pow(2, c / 1200)]));
+const CURVE_MAX = Math.max(...CURVE);
+const roughWord = v => v < .12 ? "Very smooth" : v < .5 ? "Smooth" : v < .66 ? "Some friction" : v < .86 ? "Rough" : "Very rough";
+
+/* ================================================================
+   Sound engine: additive tones whose harmonics match the model
+   ================================================================ */
+const Sound = (() => {
+  let ctx = null, out = null, rich = null, active = [], drone = null;
+  function ensure() {
+    if (!ctx) {
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const comp = ctx.createDynamicsCompressor();
+      comp.threshold.value = -20; comp.knee.value = 18; comp.ratio.value = 3;
+      const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 7000;
+      out = ctx.createGain(); out.gain.value = 0.7;
+      out.connect(lp); lp.connect(comp); comp.connect(ctx.destination);
+      const real = new Float32Array(H + 1), imag = new Float32Array(H + 1);
+      for (let k = 1; k <= H; k++) imag[k] = amp(k);
+      rich = ctx.createPeriodicWave(real, imag);
+    }
+    if (ctx.state === "suspended") ctx.resume();
+    return ctx;
+  }
+  function voice(f, t0, dur, type, level) {
+    const o = ctx.createOscillator();
+    if (type === "sine") o.type = "sine"; else o.setPeriodicWave(rich);
+    o.frequency.value = f;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0, t0);
+    g.gain.linearRampToValueAtTime(level, t0 + 0.04);
+    g.gain.setValueAtTime(level, Math.max(t0 + 0.05, t0 + dur - 0.6));
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g); g.connect(out);
+    o.start(t0); o.stop(t0 + dur + 0.05);
+    return { o, g };
+  }
+  function stopAll() {
+    if (!ctx) return;
+    const now = ctx.currentTime;
+    for (const v of active) {
+      try {
+        v.g.gain.cancelScheduledValues(now);
+        v.g.gain.setValueAtTime(v.g.gain.value, now);
+        v.g.gain.linearRampToValueAtTime(0, now + 0.06);
+        v.o.stop(now + 0.08);
+      } catch (e) {}
+    }
+    active = [];
+    if (drone) { const d = drone; drone = null; d.onEnd && d.onEnd(); }
+    timers.forEach(clearTimeout); timers = [];
+  }
+  let timers = [];
+  function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+  /** play a chord now (or after delay) */
+  function play(freqs, { dur = 2.2, type = "rich", delay = 0, keep = false, level } = {}) {
+    ensure(); if (!keep) stopAll();
+    const t = ctx.currentTime + 0.02 + delay;
+    const lv = level ?? (type === "sine" ? 0.3 : 0.2) / Math.sqrt(freqs.length);
+    for (const f of freqs) active.push(voice(f, t, dur, type, lv));
+  }
+  /** sustained tones whose frequencies can be changed live */
+  function startDrone(freqs, onEnd) {
+    ensure(); stopAll();
+    const now = ctx.currentTime, lv = 0.26 / Math.sqrt(freqs.length);
+    const vs = freqs.map(f => {
+      const o = ctx.createOscillator(); o.type = "sine"; o.frequency.value = f;
+      const g = ctx.createGain(); g.gain.setValueAtTime(0, now); g.gain.linearRampToValueAtTime(lv, now + 0.15);
+      o.connect(g); g.connect(out); o.start(now);
+      const v = { o, g }; active.push(v); return v;
+    });
+    drone = {
+      onEnd,
+      set(fs) { const t = ctx.currentTime; fs.forEach((f, i) => vs[i].o.frequency.setTargetAtTime(f, t, 0.03)); },
+    };
+    return drone;
+  }
+  return { play, startDrone, stopAll, later };
+})();
+
+/** marks a play button as busy for a duration */
+function flash(btn, secs) {
+  document.querySelectorAll(".play.is-playing").forEach(b => b.classList.remove("is-playing"));
+  btn.classList.add("is-playing");
+  clearTimeout(btn._t);
+  btn._t = setTimeout(() => btn.classList.remove("is-playing"), secs * 1000);
+}
+
+/* chip group helper */
+function chipGroup(container, items, label, sub, onSelect, initial) {
+  container.innerHTML = "";
+  const btns = items.map((it, i) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "chip";
+    b.innerHTML = `<span>${label(it)}</span><small>${sub(it)}</small>`;
+    b.setAttribute("aria-pressed", String(i === initial));
+    b.addEventListener("click", () => { select(i); onSelect(it, i, true); });
+    container.appendChild(b);
+    return b;
+  });
+  function select(i) { btns.forEach((b, j) => b.setAttribute("aria-pressed", String(i === j))); }
+  if (initial >= 0) onSelect(items[initial], initial, false);
+  return { select };
+}
+
+/* ================================================================
+   Hero
+   ================================================================ */
+(function hero() {
+  const svg = $("#hero");
+  const W = 960, x0 = 0, x1 = 960, mid = 110, periods = 3, N = 1600;
+  const comps = [4, 5, 6];
+  const X = i => x0 + (x1 - x0) * i / N;
+  const T = i => periods * i / N;
+  comps.forEach((k, j) => {
+    el("path", { class: `wave c${j + 1}`, d: linePath(N, X, i => mid - 22 * Math.cos(2 * Math.PI * k * T(i))),
+      "stroke-width": 1.4, opacity: .55 }, svg);
+  });
+  for (let p = 0; p <= periods; p++) {
+    const x = x0 + (x1 - x0) * p / periods;
+    el("line", { class: "guide", x1: x, x2: x, y1: 14, y2: 206 }, svg);
+  }
+  el("path", { class: "wave ci", d: linePath(N, X, i => {
+    const t = T(i); let s = 0; comps.forEach(k => s += Math.cos(2 * Math.PI * k * t));
+    return mid - 30 * s;
+  }), "stroke-width": 2 }, svg);
+  text(svg, 6, 214, "pattern repeats", { class: "muted" });
+  text(svg, W / periods + 6, 214, "repeats", { class: "muted" });
+  text(svg, 2 * W / periods + 6, 214, "repeats", { class: "muted" });
+
+  const C4 = midiFreq(60);
+  $('[data-play="hero"]').addEventListener("click", e => {
+    Sound.play([C4, C4 * 5 / 4, C4 * 3 / 2], { dur: 3 });
+    flash(e.currentTarget, 3);
+  });
+})();
+
+/* ================================================================
+   01 — single wave
+   ================================================================ */
+(function fig1() {
+  const svg = $("#f1");
+  const x0 = 24, x1 = 936, mid = 92, A = 62, N = 900, windowS = 1 / 50;
+  let freq = 220, phase = 0, raf = null, until = 0, path;
+  function draw() {
+    clear(svg);
+    el("line", { class: "axis", x1: x0, x2: x1, y1: mid, y2: mid }, svg);
+    const cycles = freq * windowS;
+    path = el("path", { class: "wave ci" }, svg);
+    updatePath();
+    // bracket around one cycle
+    const cw = (x1 - x0) / cycles;
+    const by = 178;
+    el("path", { class: "axis", d: `M${x0} ${by - 6}V${by}H${x0 + cw}V${by - 6}`, style: "stroke:var(--ink-3)" }, svg);
+    text(svg, x0 + cw + 10, by + 4, `one vibration = 1/${freq} of a second`, {});
+    text(svg, x1, 200, `${freq} vibrations per second`, { "text-anchor": "end", class: "strong" });
+  }
+  function updatePath() {
+    const cycles = freq * windowS;
+    path.setAttribute("d", linePath(N, i => x0 + (x1 - x0) * i / N,
+      i => mid - A * Math.cos(2 * Math.PI * cycles * i / N - phase)));
+  }
+  function tick(t) {
+    if (t > until) { raf = null; return; }
+    phase += 0.035; updatePath();
+    raf = requestAnimationFrame(tick);
+  }
+  const btns = [...document.querySelectorAll("#f1controls .chip")];
+  btns.forEach(b => b.addEventListener("click", () => {
+    btns.forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    freq = +b.dataset.f; phase = 0; draw();
+    Sound.play([freq], { type: "sine", dur: 1.6 });
+    if (!reduceMotion) { until = performance.now() + 1600; if (!raf) raf = requestAnimationFrame(tick); }
+  }));
+  draw();
+})();
+
+/* ================================================================
+   02 — two waves and their sum
+   ================================================================ */
+(function fig2() {
+  const svg = $("#f2"), read = $("#f2read");
+  const x0 = 24, x1 = 936, cycles = 8, N = 1600;
+  const yL = 52, yU = 128, yS = 228, a = 22;
+  let cur = INTERVALS[1];
+  function draw(it) {
+    cur = it;
+    clear(svg);
+    const g = el("g", { class: "fade-in" }, svg);
+    const [p, q] = it.r, ratio = p / q;
+    const X = t => x0 + (x1 - x0) * t / cycles;
+    const T = i => cycles * i / N;
+    // alignment guides
+    for (let t = 0; t <= cycles + 1e-9; t += q) el("line", { class: "guide", x1: X(t), x2: X(t), y1: 18, y2: 290 }, g);
+    // rows
+    [["Low note", yL], ["High note", yU], ["Together: what reaches your ear", yS]].forEach(([s, y], i) => {
+      el("line", { class: "axis", x1: x0, x2: x1, y1: y, y2: y }, g);
+      text(g, x0 + 10, y - (i === 2 ? 56 : 32), s, { class: "muted" });
+    });
+    el("path", { class: "wave c1", d: linePath(N, i => X(T(i)), i => yL - a * Math.cos(2 * Math.PI * T(i))) }, g);
+    el("path", { class: "wave c2", d: linePath(N, i => X(T(i)), i => yU - a * Math.cos(2 * Math.PI * ratio * T(i))) }, g);
+    el("path", { class: "wave ci", d: linePath(N, i => X(T(i)),
+      i => yS - a * (Math.cos(2 * Math.PI * T(i)) + Math.cos(2 * Math.PI * ratio * T(i)))) }, g);
+    // peak dots
+    for (let k = 0; k <= cycles; k++) el("circle", { cx: X(k), cy: yL - a, r: 3.5, class: "f1" }, g);
+    for (let m = 0; m / ratio <= cycles + 1e-9; m++) el("circle", { cx: X(m / ratio), cy: yU - a, r: 3.5, class: "f2" }, g);
+    for (let t = 0; t <= cycles + 1e-9; t += q)
+      el("circle", { cx: X(t), cy: yS - 2 * a, r: 6, fill: "none", class: "ci", "stroke-width": 1.6 }, g);
+
+    const rep = BASE / q;
+    const plural = (n, w) => `${n} ${w}${n === 1 ? "" : "s"}`;
+    let s = `<b>${it.name} · ${p} : ${q}.</b> The waves peak together every <b>${plural(q, "vibration")}</b> of the low note (${p} of the high one). `;
+    if (q <= 2) s += `That's a short, regular loop. The combined wave repeats ${Math.round(rep)} times a second, and the ear takes it in easily.`;
+    else if (q <= 5) s += `The loop is longer but still regular. The combined wave repeats about ${Math.round(rep)} times a second.`;
+    else s += `That's past the edge of this picture. The pattern only comes round about ${rep.toFixed(rep < 10 ? 1 : 0)} times a second and looks almost random up close.`;
+    read.innerHTML = s;
+  }
+  chipGroup($("#f2chips"), INTERVALS, it => it.name, it => `${it.r[0]}:${it.r[1]}`,
+    (it, i, user) => { draw(it); if (user) playIt(); }, 1);
+  function playIt() {
+    Sound.play([BASE, BASE * cur.r[0] / cur.r[1]], { type: "sine", dur: 2.2 });
+    flash($('[data-play="f2"]'), 2.2);
+  }
+  $('[data-play="f2"]').addEventListener("click", playIt);
+})();
+
+/* ================================================================
+   03 — beats & roughness
+   ================================================================ */
+(function fig3() {
+  const sA = $("#f3a"), sB = $("#f3b"), slider = $("#beat"), out = $("#beatOut"), read = $("#f3read"), btn = $("#beatPlay");
+  const x0 = 24, x1 = 936, mid = 70, A = 26, N = 900, DMAX = 90;
+  const roughAt = d => pairRough(BASE, 1, BASE + d, 1);
+  let rMax = 0; for (let d = 0; d <= DMAX; d += .25) rMax = Math.max(rMax, roughAt(d));
+
+  // static parts of fig B
+  const yb = 112, yt = 22;
+  const XB = d => x0 + (x1 - x0) * d / DMAX;
+  const YB = r => yb - (yb - yt) * r / rMax;
+  const zones = [[0, 15, "beating"], [15, 55, "roughness"], [55, DMAX, "two clear notes"]];
+  zones.forEach(([a, b, s], i) => {
+    if (i) el("line", { class: "guide", x1: XB(a), x2: XB(a), y1: yt - 8, y2: yb }, sB);
+    text(sB, (XB(a) + XB(b)) / 2, yt - 10, s, { "text-anchor": "middle", class: "muted" });
+  });
+  el("line", { class: "axis", x1: x0, x2: x1, y1: yb, y2: yb }, sB);
+  for (let d = 0; d <= DMAX; d += 10) {
+    el("line", { class: "axis", x1: XB(d), x2: XB(d), y1: yb, y2: yb + 4 }, sB);
+    text(sB, XB(d), yb + 18, d + (d === DMAX ? " Hz apart" : ""), { "text-anchor": d === DMAX ? "end" : "middle", class: "muted" });
+  }
+  el("path", { class: "wave ci", d: linePath(360, i => XB(DMAX * i / 360), i => YB(roughAt(DMAX * i / 360))) }, sB);
+  const vline = el("line", { x1: 0, x2: 0, y1: yt, y2: yb, stroke: "var(--ink)", "stroke-width": 1 }, sB);
+  const dot = el("circle", { r: 6, class: "fi", stroke: "var(--paper)", "stroke-width": 2 }, sB);
+
+  // fig A
+  el("line", { class: "axis", x1: x0, x2: x1, y1: mid, y2: mid }, sA);
+  const env = el("path", { fill: "color-mix(in oklab, var(--ink) 14%, transparent)", stroke: "var(--ink)", "stroke-width": 1.5, "stroke-linejoin": "round" }, sA);
+  for (let s = 0; s <= 1; s += .25) {
+    text(sA, x0 + (x1 - x0) * s, 140, s === 0 ? "0 s" : s === 1 ? "1 second" : s + " s", { "text-anchor": s === 0 ? "start" : s === 1 ? "end" : "middle", class: "muted" });
+  }
+  text(sA, x0, 16, "loudness over time", { class: "muted" });
+
+  function update() {
+    const d = +slider.value;
+    out.textContent = d + " Hz";
+    // envelope of cos(2πf t)+cos(2π(f+d)t) = 2|cos(πdt)|
+    let top = "", bot = "";
+    for (let i = 0; i <= N; i++) {
+      const t = i / N, e = Math.abs(Math.cos(Math.PI * d * t));
+      const x = (x0 + (x1 - x0) * t).toFixed(1);
+      top += (i ? "L" : "M") + x + " " + (mid - (A + 4) * e).toFixed(1);
+    }
+    for (let i = N; i >= 0; i--) {
+      const t = i / N, e = Math.abs(Math.cos(Math.PI * d * t));
+      bot += "L" + (x0 + (x1 - x0) * t).toFixed(1) + " " + (mid + (A + 4) * e).toFixed(1);
+    }
+    env.setAttribute("d", top + bot + "Z");
+    const x = XB(d), y = YB(roughAt(d));
+    vline.setAttribute("x1", x); vline.setAttribute("x2", x); vline.setAttribute("y1", y);
+    dot.setAttribute("cx", x); dot.setAttribute("cy", y);
+    let s;
+    if (d === 0) s = `<b>Identical tones.</b> They merge into one steady, louder tone. No wobble at all.`;
+    else if (d < 6) s = `<b>${d} Hz apart.</b> The sound swells and fades ${d} time${d === 1 ? "" : "s"} a second, a slow, gentle beating.`;
+    else if (d < 15) s = `<b>${d} Hz apart.</b> A fast flutter, ${d} pulses a second. The beat is starting to blur.`;
+    else if (d < 55) s = `<b>${d} Hz apart.</b> The pulses come too fast to follow (${d} a second). They blur into <b>roughness</b>, a buzzy, grating texture${d < 32 ? ". This is close to the roughest it gets" : ""}.`;
+    else s = `<b>${d} Hz apart.</b> Far enough that the ear sorts them into two separate notes. The roughness fades away.`;
+    read.innerHTML = s;
+    if (drone) drone.set([BASE, BASE + d]);
+  }
+  let drone = null;
+  function setBtn(on) {
+    btn.classList.toggle("is-on", on); btn.setAttribute("aria-pressed", String(on));
+    btn.querySelector(".lbl").textContent = on ? "Stop" : "Listen (hold a tone)";
+  }
+  btn.addEventListener("click", () => {
+    if (drone) { Sound.stopAll(); return; }
+    drone = Sound.startDrone([BASE, BASE + +slider.value], () => { drone = null; setBtn(false); });
+    setBtn(true);
+  });
+  slider.addEventListener("input", update);
+  update();
+})();
+
+/* ================================================================
+   04a — harmonics of one note
+   ================================================================ */
+(function fig4a() {
+  const svg = $("#f4a");
+  const x0 = 60, x1 = 920, base = 128, maxH = 92;
+  el("line", { class: "axis", x1: 24, x2: 936, y1: base, y2: base }, svg);
+  const stems = [];
+  for (let k = 1; k <= H; k++) {
+    const x = x0 + (x1 - x0) * (k - 1) / (H - 1);
+    const h = maxH * amp(k);
+    const s = el("line", { class: "stem c1", x1: x, x2: x, y1: base, y2: base - h }, svg);
+    el("circle", { cx: x, cy: base - h, r: 4, class: "f1" }, svg);
+    text(svg, x, base + 20, `${k}×`, { "text-anchor": "middle", class: "strong" });
+    text(svg, x, base + 36, `${BASE * k} Hz`, { "text-anchor": "middle", class: "muted" });
+    stems.push(s);
+  }
+  text(svg, 24, 16, "loudness", { class: "muted" });
+  const btn = $('[data-play="f4a"]');
+  btn.addEventListener("click", () => {
+    Sound.stopAll();
+    const step = 0.55;
+    for (let k = 1; k <= H; k++) {
+      Sound.play([BASE * k], { type: "sine", dur: 0.9, delay: (k - 1) * step, keep: true, level: 0.32 * amp(k) });
+      Sound.later(() => { stems.forEach((s, j) => s.style.opacity = j === k - 1 ? 1 : .25); }, (k - 1) * step * 1000);
+    }
+    Sound.play([BASE], { dur: 2.4, delay: H * step + 0.25, keep: true });
+    Sound.later(() => stems.forEach(s => s.style.opacity = 1), (H * step + 0.25) * 1000);
+    flash(btn, H * step + 2.6);
+  });
+})();
+
+/* ================================================================
+   Spectrum renderer, used by 04b and 06
+   notes: [{ f, label, sub, cls }]
+   ================================================================ */
+function renderSpectrum(svg, notes, { fmin, fmax }) {
+  clear(svg);
+  const W = 960, x0 = 104, x1 = 940, rowH = 44, top = 14;
+  const n = notes.length;
+  const X = f => x0 + (x1 - x0) * Math.log(f / fmin) / Math.log(fmax / fmin);
+  const g = el("g", { class: "fade-in" }, svg);
+  // per-note rows
+  notes.forEach((nt, i) => {
+    const yb = top + (i + 1) * rowH;
+    el("line", { class: "axis", x1: x0, x2: x1, y1: yb, y2: yb }, g);
+    el("circle", { cx: 12, cy: yb - 14, r: 5, class: `f${nt.cls}` }, g);
+    text(g, 24, yb - 10, nt.label, { class: "strong" });
+    text(g, 24, yb + 4, nt.sub, { class: "muted" });
+    partials(nt.f).forEach(p => {
+      const x = X(p.f), h = 28 * p.a;
+      el("line", { class: `stem c${nt.cls}`, x1: x, x2: x, y1: yb, y2: yb - h }, g);
+    });
+  });
+  // together strip
+  const yT = top + n * rowH + 96;
+  el("line", { class: "axis", x1: x0, x2: x1, y1: yT, y2: yT }, g);
+  text(g, 24, yT - 10, "Together", { class: "strong" });
+  text(g, 24, yT + 4, "as you hear it", { class: "muted" });
+  const all = [];
+  notes.forEach((nt, i) => partials(nt.f).forEach(p => all.push({ ...p, note: i, cls: nt.cls })));
+  const hOf = p => 44 * p.a;
+  // clashes and matches between partials of different notes
+  const marks = el("g", {}, g);
+  let total = 0;
+  for (let i = 0; i < all.length; i++) for (let j = i + 1; j < all.length; j++) {
+    const p = all[i], q = all[j];
+    if (p.note === q.note) continue;
+    const d = pairRough(p.f, p.a, q.f, q.a); total += d;
+    const rel = Math.abs(p.f - q.f) / Math.min(p.f, q.f);
+    if (rel < 0.009) {
+      const x = (X(p.f) + X(q.f)) / 2, y = yT - Math.max(hOf(p), hOf(q)) - 11;
+      el("circle", { cx: x, cy: y, r: 5, fill: "none", stroke: "var(--ink)", "stroke-width": 1.6 }, marks);
+    } else if (d > 0.02) {
+      const xa = X(p.f), xb = X(q.f), ya = yT - hOf(p) - 5, yb2 = yT - hOf(q) - 5;
+      const lift = 14 + Math.min(26, Math.abs(xb - xa) * .5);
+      const cx = (xa + xb) / 2, cy = Math.min(ya, yb2) - lift;
+      let dd = "";
+      const S = 28;
+      for (let s = 0; s <= S; s++) {
+        const u = s / S;
+        const bx = (1 - u) * (1 - u) * xa + 2 * (1 - u) * u * cx + u * u * xb;
+        const by = (1 - u) * (1 - u) * ya + 2 * (1 - u) * u * cy + u * u * yb2;
+        const wig = Math.sin(u * Math.PI * 7) * 2.2 * Math.sin(u * Math.PI);
+        dd += (s ? "L" : "M") + bx.toFixed(1) + " " + (by + wig).toFixed(1);
+      }
+      el("path", { d: dd, fill: "none", stroke: "var(--ink)", "stroke-width": 1.5,
+        "stroke-linecap": "round", opacity: clamp(d / 0.11, 0.18, 1).toFixed(2) }, marks);
+    }
+  }
+  // stems on top of marks
+  all.sort((a, b) => b.a - a.a).forEach(p => {
+    const x = X(p.f);
+    el("line", { class: `stem c${p.cls}`, x1: x, x2: x, y1: yT, y2: yT - hOf(p) }, g);
+  });
+  // frequency ticks
+  [125, 250, 500, 1000, 2000, 4000].filter(f => f >= fmin && f <= fmax).forEach(f => {
+    const x = X(f);
+    el("line", { class: "axis", x1: x, x2: x, y1: yT, y2: yT + 4 }, g);
+    text(g, x, yT + 18, f >= 1000 ? (f / 1000) + "k Hz" : f + " Hz", { "text-anchor": "middle", class: "muted" });
+  });
+  svg.setAttribute("viewBox", `0 0 ${W} ${yT + 26}`);
+  return total;
+}
+
+function renderMeter(container, v, label = "Roughness") {
+  if (!container.firstChild) {
+    container.innerHTML = `<div class="row"><span>${label}</span><b></b></div>
+      <div class="track"><div class="fill"></div></div>
+      <div class="ends"><span>smooth</span><span>rough</span></div>`;
+  }
+  container.querySelector("b").textContent = roughWord(v);
+  container.querySelector(".fill").style.width = (clamp(v, 0, 1) * 100).toFixed(1) + "%";
+  container.setAttribute("role", "meter");
+  container.setAttribute("aria-valuemin", "0"); container.setAttribute("aria-valuemax", "100");
+  container.setAttribute("aria-valuenow", Math.round(clamp(v, 0, 1) * 100));
+  container.setAttribute("aria-label", `${label}: ${roughWord(v)}`);
+}
+
+/* ================================================================
+   04b — two ladders
+   ================================================================ */
+(function fig4b() {
+  const svg = $("#f4b"), meter = $("#f4meter");
+  let cur;
+  function draw(it) {
+    cur = it;
+    const f2 = BASE * it.r[0] / it.r[1];
+    const total = renderSpectrum(svg, [
+      { f: BASE, label: "Low note", sub: "220 Hz", cls: 1 },
+      { f: f2, label: "High note", sub: Math.round(f2) + " Hz", cls: 2 },
+    ], { fmin: 180, fmax: 2900 });
+    renderMeter(meter, total / CURVE_MAX);
+  }
+  function playIt() {
+    Sound.play([BASE, BASE * cur.r[0] / cur.r[1]], { dur: 2.4 });
+    flash($('[data-play="f4b"]'), 2.4);
+  }
+  chipGroup($("#f4chips"), INTERVALS, it => it.name, it => `${it.r[0]}:${it.r[1]}`,
+    (it, i, user) => { draw(it); if (user) playIt(); }, 1);
+  $('[data-play="f4b"]').addEventListener("click", playIt);
+})();
+
+/* ================================================================
+   05 — the consonance curve
+   ================================================================ */
+(function fig5() {
+  const svg = $("#f5"), tip = $("#f5tip"), fig = svg.parentElement;
+  const x0 = 40, x1 = 936, yTop = 96, yBot = 300;
+  const X = c => x0 + (x1 - x0) * c / 1200;
+  const Y = r => yBot - (yBot - yTop) * r / CURVE_MAX;
+  // grid
+  el("line", { class: "axis", x1: x0, x2: x1, y1: yBot, y2: yBot }, svg);
+  for (let s = 0; s <= 12; s++) {
+    el("line", { class: "axis", x1: X(s * 100), x2: X(s * 100), y1: yBot, y2: yBot + 5 }, svg);
+    text(svg, X(s * 100), yBot + 20, String(s), { "text-anchor": "middle", class: "muted" });
+  }
+  text(svg, (x0 + x1) / 2, yBot + 40, "semitones apart (piano keys)", { "text-anchor": "middle", class: "muted" });
+  text(svg, 0, 0, "smoother → rougher", { class: "muted", "text-anchor": "middle", transform: `translate(16 ${(yTop + yBot) / 2}) rotate(-90)` });
+  // area + line
+  const N = CURVE.length - 1;
+  const lineD = linePath(N, i => X(i), i => Y(CURVE[i]));
+  el("path", { d: lineD + `L${X(1200)} ${yBot}L${X(0)} ${yBot}Z`, fill: "color-mix(in oklab, var(--ink) 6%, transparent)" }, svg);
+  el("path", { d: lineD, class: "wave ci" }, svg);
+  // labelled valleys
+  const named = [
+    { s: 0, label: "unison", r: [1, 1] },
+    { s: 3, label: "minor 3rd", r: [6, 5] },
+    { s: 4, label: "major 3rd", r: [5, 4] },
+    { s: 5, label: "4th", r: [4, 3] },
+    { s: 7, label: "5th", r: [3, 2] },
+    { s: 9, label: "major 6th", r: [5, 3] },
+    { s: 12, label: "octave", r: [2, 1] },
+  ];
+  const tbody = $("#f5table tbody");
+  named.forEach((n, i) => {
+    const c = Math.round(1200 * Math.log2(n.r[0] / n.r[1]));
+    const r = CURVE[c];
+    const x = X(c), y = Y(r);
+    const ly = i % 2 ? 50 : 16;
+    el("line", { class: "guide", x1: x, x2: x, y1: ly + 20, y2: y - 7 }, svg);
+    el("circle", { cx: x, cy: y, r: 4.5, class: "fi", stroke: "var(--paper)", "stroke-width": 2 }, svg);
+    const anchor = c === 0 ? "start" : c === 1200 ? "end" : "middle";
+    const lx = x + (c === 0 ? -2 : c === 1200 ? 2 : 0);
+    text(svg, lx, ly, n.label, { "text-anchor": anchor, class: "strong" });
+    text(svg, lx, ly + 14, `${n.r[0]}:${n.r[1]}`, { "text-anchor": anchor, class: "muted" });
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${n.label[0].toUpperCase() + n.label.slice(1)}</td><td>${n.r[0]}:${n.r[1]}</td><td>${(c / 100).toFixed(2)}</td><td>${Math.round(100 * r / CURVE_MAX)}</td>`;
+    tbody.appendChild(tr);
+  });
+  [["semitone", 1], ["tritone", 6]].forEach(([s, k]) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${s[0].toUpperCase() + s.slice(1)} (piano)</td><td>—</td><td>${k}.00</td><td>${Math.round(100 * CURVE[k * 100] / CURVE_MAX)}</td>`;
+    tbody.appendChild(tr);
+  });
+  // hover layer
+  const cross = el("line", { y1: yTop - 16, y2: yBot, stroke: "var(--ink-3)", "stroke-width": 1, visibility: "hidden" }, svg);
+  const hdot = el("circle", { r: 6, fill: "var(--n2)", stroke: "var(--paper)", "stroke-width": 2, visibility: "hidden" }, svg);
+  const hit = el("rect", { x: x0 - 10, y: yTop - 20, width: x1 - x0 + 20, height: yBot - yTop + 40, fill: "transparent", style: "cursor:pointer" }, svg);
+  function centsAt(evt) {
+    const pt = svg.createSVGPoint(); pt.x = evt.clientX; pt.y = evt.clientY;
+    const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    return clamp(Math.round((p.x - x0) / (x1 - x0) * 1200), 0, 1200);
+  }
+  function describe(c) {
+    let best = null, bd = 1e9;
+    for (const n of named) {
+      const nc = 1200 * Math.log2(n.r[0] / n.r[1]);
+      if (Math.abs(nc - c) < bd) { bd = Math.abs(nc - c); best = n; }
+    }
+    const semis = Math.round(c / 100);
+    const name = bd < 14 ? best.label[0].toUpperCase() + best.label.slice(1) + ` (${best.r[0]}:${best.r[1]})`
+      : Math.abs(c - semis * 100) < 8 ? intervalName(semis) + " (piano)" : "Between the keys";
+    return { name, r: CURVE[c] / CURVE_MAX };
+  }
+  function show(evt) {
+    const c = centsAt(evt), x = X(c), y = Y(CURVE[c]);
+    cross.setAttribute("x1", x); cross.setAttribute("x2", x); cross.setAttribute("visibility", "visible");
+    hdot.setAttribute("cx", x); hdot.setAttribute("cy", y); hdot.setAttribute("visibility", "visible");
+    const d = describe(c);
+    tip.innerHTML = `<b>${d.name}</b><br>${(c / 100).toFixed(2)} semitones · ${roughWord(d.r).toLowerCase()}`;
+    const box = svg.getBoundingClientRect(), fb = fig.getBoundingClientRect();
+    const sx = box.width / 960;
+    tip.style.left = (box.left - fb.left + x * sx) + "px";
+    tip.style.top = (box.top - fb.top + y * sx) + "px";
+    tip.classList.add("on");
+  }
+  function hide() { cross.setAttribute("visibility", "hidden"); hdot.setAttribute("visibility", "hidden"); tip.classList.remove("on"); }
+  hit.addEventListener("pointermove", show);
+  hit.addEventListener("pointerdown", show);
+  hit.addEventListener("pointerleave", hide);
+  hit.addEventListener("click", evt => {
+    const c = centsAt(evt);
+    Sound.play([BASE, BASE * Math.pow(2, c / 1200)], { dur: 1.8 });
+  });
+})();
+
+/* ================================================================
+   06 — chord builder
+   ================================================================ */
+(function fig6() {
+  const svg = $("#f6"), keysEl = $("#keys"), read = $("#f6read"), ratioEl = $("#f6ratio"),
+        meter = $("#f6meter"), pairsEl = $("#f6pairs"), playBtn = $('[data-play="f6"]');
+  const LO = 48, HI = 72; // C3 .. C5
+  let sel = [60, 64, 67];
+  const PRESETS = [
+    { name: "Major", s: [0, 4, 7] },
+    { name: "Minor", s: [0, 3, 7] },
+    { name: "Sus4", s: [0, 5, 7] },
+    { name: "Open fifth", s: [0, 7, 12] },
+    { name: "Diminished", s: [0, 3, 6] },
+    { name: "Augmented", s: [0, 4, 8] },
+    { name: "Cluster", s: [0, 1, 2] },
+  ];
+  // keyboard
+  const keyBtns = {};
+  const whites = [];
+  for (let m = LO; m <= HI; m++) if (![1, 3, 6, 8, 10].includes(m % 12)) whites.push(m);
+  const ww = 100 / whites.length;
+  for (let m = LO; m <= HI; m++) {
+    const black = [1, 3, 6, 8, 10].includes(m % 12);
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "key " + (black ? "black" : "white");
+    b.setAttribute("aria-label", midiName(m));
+    b.innerHTML = `<span class="dot"></span>${!black && m % 12 === 0 ? midiName(m) : ""}`;
+    if (black) {
+      const wi = whites.indexOf(m - 1);
+      b.style.left = `calc(${(wi + 1) * ww}% - 2.2%)`;
+    }
+    b.addEventListener("click", () => toggleKey(m));
+    keysEl.appendChild(b);
+    keyBtns[m] = b;
+  }
+  function toggleKey(m) {
+    if (sel.includes(m)) { if (sel.length > 1) sel = sel.filter(x => x !== m); }
+    else { sel.push(m); if (sel.length > 3) sel.shift(); }
+    presets.select(-1);
+    update(true);
+  }
+  const presets = chipGroup($("#f6chips"), PRESETS, p => p.name, p => p.s.map(x => NOTE[x % 12]).join(" "),
+    (p, i, user) => { sel = p.s.map(x => 60 + x); update(user); }, 0);
+
+  function sorted() { return [...sel].sort((a, b) => a - b); }
+  function update(user) {
+    const ms = sorted();
+    const fs = ms.map(midiFreq);
+    // keyboard state
+    for (const m in keyBtns) {
+      const b = keyBtns[m], i = ms.indexOf(+m);
+      b.classList.toggle("sel", i >= 0);
+      b.setAttribute("aria-pressed", String(i >= 0));
+      const dot = b.querySelector(".dot");
+      dot.style.background = i >= 0 ? `var(--n${i + 1})` : "";
+    }
+    // spectrum
+    const total = renderSpectrum(svg, ms.map((m, i) => ({ f: midiFreq(m), label: midiName(m), sub: Math.round(midiFreq(m)) + " Hz", cls: i + 1 })),
+      { fmin: 110, fmax: 3300 });
+    // ratio via closest just intervals
+    const lo = ms[0];
+    const fr = ms.map(m => { const s = m - lo, j = JUST[s % 12], o = Math.pow(2, Math.floor(s / 12)); return [j[0] * o, j[1]]; });
+    const L = fr.reduce((a, f) => lcm(a, f[1]), 1);
+    let ints = fr.map(f => f[0] * L / f[1]);
+    const G = ints.reduce((a, b) => gcd(a, b));
+    ints = ints.map(x => x / G);
+    ratioEl.textContent = ms.length > 1 ? ints.join(" : ") : "1";
+    const maxI = Math.max(...ints);
+    const rootF = fs[0] / ints[0];
+    const rootName = midiName(Math.round(freqMidi(rootF)));
+    let s;
+    if (ms.length === 1) s = `A single note: one ladder, nothing to rub against. Add another note.`;
+    else if (ints[0] === 1) s = `The low note's own ladder already contains ${ms.length > 2 ? "the others" : "the other"}: ${ints.slice(1).map(x => `harmonic ${x}`).join(" and ")}. That's about as fused as two pitches can be.`;
+    else if (maxI <= 16) s = `These notes sit almost exactly on harmonics <b>${ints.join(", ")}</b> of a single low <b>${rootName}</b>, so they fit together like neighbouring rungs of one ladder.`;
+    else if (maxI <= 45) s = `There is a shared ladder, but you have to go down to ${rootName} and up to harmonic ${maxI} to find it. That's a looser fit with more near misses.`;
+    else s = `The numbers balloon to ${maxI}. There's no simple common ladder, so the harmonics scatter and many land too close together.`;
+    read.innerHTML = s;
+    // roughness relative to a semitone cluster of the same size and register
+    const ref = ms.length > 1 ? roughness(ms.map((_, i) => midiFreq(lo + i))) : 1;
+    renderMeter(meter, ms.length > 1 ? total / ref : 0);
+    // pairs
+    pairsEl.innerHTML = "";
+    for (let i = 0; i < ms.length; i++) for (let j = i + 1; j < ms.length; j++) {
+      const st = ms[j] - ms[i], jr = JUST[st % 12], oc = Math.pow(2, Math.floor(st / 12));
+      const g2 = gcd(jr[0] * oc, jr[1]);
+      const li = document.createElement("li");
+      li.innerHTML = `<span class="duo"><i style="background:var(--n${i + 1})"></i><i style="background:var(--n${j + 1})"></i></span>
+        <span><b>${midiName(ms[i])}–${midiName(ms[j])}</b> · ${intervalName(st).toLowerCase()} · ${jr[0] * oc / g2}:${jr[1] / g2}</span>`;
+      pairsEl.appendChild(li);
+    }
+    if (user) playIt();
+  }
+  function playIt() {
+    Sound.play(sorted().map(midiFreq), { dur: 2.6 });
+    flash(playBtn, 2.6);
+  }
+  playBtn.addEventListener("click", playIt);
+})();
+
+/* ================================================================
+   07 — tuning & resolution
+   ================================================================ */
+(function fig7() {
+  const C4 = midiFreq(60), E_just = C4 * 5 / 4, E_et = midiFreq(64);
+  function envFig(svg, f1, a1, f2, a2) {
+    const x0 = 4, x1 = 456, mid = 50, A = 20, N = 500;
+    el("line", { class: "axis", x1: x0, x2: x1, y1: mid, y2: mid }, svg);
+    const d = Math.abs(f1 - f2);
+    let top = "", bot = "";
+    const env = t => Math.sqrt(a1 * a1 + a2 * a2 + 2 * a1 * a2 * Math.cos(2 * Math.PI * d * t)) / (a1 + a2);
+    for (let i = 0; i <= N; i++) { const t = i / N; top += (i ? "L" : "M") + (x0 + (x1 - x0) * t).toFixed(1) + " " + (mid - A * 1.6 * env(t)).toFixed(1); }
+    for (let i = N; i >= 0; i--) { const t = i / N; bot += "L" + (x0 + (x1 - x0) * t).toFixed(1) + " " + (mid + A * 1.6 * env(t)).toFixed(1); }
+    el("path", { d: top + bot + "Z", fill: "color-mix(in oklab, var(--ink) 14%, transparent)", stroke: "var(--ink)", "stroke-width": 1.4 }, svg);
+    text(svg, x0, 104, "0 s", { class: "muted" });
+    text(svg, x1, 104, d < 0.5 ? "1 s · steady" : `1 s · ${d.toFixed(1)} beats per second`, { "text-anchor": "end", class: "muted" });
+  }
+  envFig($("#f7a"), C4 * 5, amp(5), E_just * 4, amp(4));
+  envFig($("#f7b"), C4 * 5, amp(5), E_et * 4, amp(4));
+  $('[data-play="f7a"]').addEventListener("click", e => { Sound.play([C4, E_just], { dur: 3.2 }); flash(e.currentTarget, 3.2); });
+  $('[data-play="f7b"]').addEventListener("click", e => { Sound.play([C4, E_et], { dur: 3.2 }); flash(e.currentTarget, 3.2); });
+
+  // tension -> release
+  const G7 = [55, 59, 62, 65], C = [48, 60, 64, 67];
+  const box = $("#f7c");
+  const ref = ms => roughness(ms.map((_, i) => midiFreq(ms[0] + i)));
+  [["G7 · tension", G7], ["C major · release", C]].forEach(([name, ms]) => {
+    const fs = ms.map(midiFreq);
+    const v = roughness(fs) / ref(ms);
+    const d = document.createElement("div");
+    d.innerHTML = `<h4>${name}</h4><p>${ms.map(midiName).join(" · ")}</p><div class="meter" style="margin-top:6px"></div>`;
+    box.appendChild(d);
+    renderMeter(d.querySelector(".meter"), v);
+  });
+  $('[data-play="f7c"]').addEventListener("click", e => {
+    Sound.play(G7.map(midiFreq), { dur: 1.7 });
+    Sound.play(C.map(midiFreq), { dur: 3, delay: 1.55, keep: true });
+    flash(e.currentTarget, 4.6);
+  });
+})();
+
+})();
+</script>
+</body>
+</html>
